@@ -16,7 +16,7 @@ This project was carried out by 3 members, with their individual contributions
 % This function takes the translation and Rotation from the tsv datafile, extract the camera intrinsics parameters from the rosbag 
 
 % **Code execution**: \
-% c = sensorCalibration(); 
+% RGBD = sensorCalibration(); 
 
 + [**calibrationRGBD**](https://github.com/phuminhquangpham/rgbdemsensor/blob/main/sensorCalibration.m#L59) \
 % This function is used for camera calibration, processing a sequence of frames (images), detecting checkerboard patterns, \
@@ -24,7 +24,7 @@ This project was carried out by 3 members, with their individual contributions
 % The function stores the obtained parameters for further calibration analysis 
 
 % **Code execution**: \
-% calibrationRGBD = extractRGBD; 
+% calibrationRGBD = RGBD.extractRGBD; 
 
 + [**computeEMTransform**](https://github.com/phuminhquangpham/rgbdemsensor/blob/main/sensorCalibration.m#L59) 
 
@@ -32,7 +32,7 @@ This project was carried out by 3 members, with their individual contributions
 % This can be achieved by chaining together the transformation involving the checkerboard as an intermediate reference 
 
 % **Code execution**: \
-% computeEMTransform = emToCameraTransform;
+% computeEMTransform = RGBD.emToCameraTransform;
 
 <hr> 
 

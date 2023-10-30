@@ -64,5 +64,5 @@ the correct transformation when reconstructing 3D pointCloud (from the tracking 
 
 <hr>
 
-### [runner](https://github.com/phuminhquangpham/rgbdemsensor/blob/main/runner.m)
+### [Runner](https://github.com/phuminhquangpham/rgbdemsensor/blob/main/runner.m)
 To run this project run this runner script.

@@ -46,7 +46,7 @@ This project was carried out by 3 members, with their individual contributions
 % reconstruction. 
 
 % **Code execution**: \
-% transform = c.emToCameraTransform. \
+% transform = c.emTransform. \
 % [camPose, frameSkip, extrinsic] = tracking(transform)
 
 <hr>

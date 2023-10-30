@@ -14,14 +14,14 @@
 [**extractRGBD**](https://github.com/phuminhquangpham/rgbdemsensor/blob/main/sensorCalibration.m#L59) \
 % This function is used for camera calibration, processing a sequence of frames (images), detecting checkerboard patterns, \
 % estimate the camera's extrinsic parameters (rotation and translation) based on the detected points \
-% The function stores the obtained parameters for further calibration analysis \
+% The function stores the obtained parameters for further calibration analysis 
 
 % **Code execution**: \
 % c.extractRGBD(); 
 
 [**computeEMToCameraTransform**](https://github.com/phuminhquangpham/rgbdemsensor/blob/main/sensorCalibration.m#L59) \
 % This function computes the transformation from EM sensor's coordinate system to the camera coordinate's systen. \
-% This can be achieved by chaining together the transformation involving the checkerboard as an intermediate reference \
+% This can be achieved by chaining together the transformation involving the checkerboard as an intermediate reference 
 
 % **Code execution**: \
 % c.computeEMToCameraTransform();

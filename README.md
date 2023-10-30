@@ -46,4 +46,4 @@
 % focalLength = c.fLength;\
 % principalPoint = c.pPoint; \
 % imageSize = size(c.imSize); \
-% [densePtCloud, sparsePtCloud] = ptcreconstruct(focalLength, principalPoint, imageSize, camPose
+% [densePtCloud, sparsePtCloud] = ptcreconstruct(focalLength, principalPoint, imageSize, camPose)

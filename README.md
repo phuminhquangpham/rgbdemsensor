@@ -2,8 +2,8 @@
 This project was carried out by 3 members, with their individual contributions 
 
 + **Phu Minh Quang Pham**  - 14231688   **(33%)**
-+ **Rhys Darcy**           - 24447183   **(33%**) 
-+ **Alex Cacciola**        - 24569826   **(34%)**
++ **Rhys Darcy**           - 24447183   **(34%**) 
++ **Alex Cacciola**        - 24569826   **(33%)**
 
 **1 CLASS**: sensorCalibration (carried out by Alex) \
 **2 FUNCTIONS**: tracking (carried out by Rhys) and ptcreconstruct (carried out by Phu)
@@ -24,7 +24,7 @@ This project was carried out by 3 members, with their individual contributions
 % The function stores the obtained parameters for further calibration analysis 
 
 % **Code execution**: \
-% calibrationRGBD = RGBD.extractRGBD; 
+%  RGBD.calibrationRGBD(); 
 
 + [**computeEMTransform**](https://github.com/phuminhquangpham/rgbdemsensor/blob/main/sensorCalibration.m#L59) 
 
@@ -32,7 +32,7 @@ This project was carried out by 3 members, with their individual contributions
 % This can be achieved by chaining together the transformation involving the checkerboard as an intermediate reference 
 
 % **Code execution**: \
-% computeEMTransform = RGBD.emToCameraTransform;
+% RGBD.computeEMTransform();
 
 <hr> 
 
@@ -46,7 +46,7 @@ This project was carried out by 3 members, with their individual contributions
 % reconstruction. 
 
 % **Code execution**: \
-% transform = RGBD.emToCameraTransform \
+% transform = RGBD.emTransform \
 % [camPose, frameSkip, extrinsic] = tracking(transform)
 
 <hr>

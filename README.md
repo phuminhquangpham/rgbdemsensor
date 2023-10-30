@@ -1,8 +1,8 @@
 ## 3D reconstruction using RGB-D camera and EM sensor
 This project was carried out by 3 members, with their individual contributions 
 
-+ **Phu Minh Quang Pham**  - 14231688   **(33%)** \
-+ **Rhys Darcy**           - 24447183   **(33%**) \
++ **Phu Minh Quang Pham**  - 14231688   **(33%)**
++ **Rhys Darcy**           - 24447183   **(33%**) 
 + **Alex Cacciola**        - 24569826   **(34%)**
 
 **1 CLASS**: sensorCalibration (carried out by Alex) \
@@ -18,7 +18,7 @@ This project was carried out by 3 members, with their individual contributions
 % **Code execution**: \
 % c = sensorCalibration(); 
 
-+ [**extractRGBD**](https://github.com/phuminhquangpham/rgbdemsensor/blob/main/sensorCalibration.m#L59) \
++ [**calibrationRGBD**](https://github.com/phuminhquangpham/rgbdemsensor/blob/main/sensorCalibration.m#L59) \
 % This function is used for camera calibration, processing a sequence of frames (images), detecting checkerboard patterns, \
 % estimate the camera's extrinsic parameters (rotation and translation) based on the detected points \
 % The function stores the obtained parameters for further calibration analysis 
@@ -26,7 +26,7 @@ This project was carried out by 3 members, with their individual contributions
 % **Code execution**: \
 % calibrationRGBD = extractRGBD; 
 
-+ [**computeEMToCameraTransform**](https://github.com/phuminhquangpham/rgbdemsensor/blob/main/sensorCalibration.m#L59) \
++ [**computeEMTransform**](https://github.com/phuminhquangpham/rgbdemsensor/blob/main/sensorCalibration.m#L59) \
 
 % This function computes the transformation from EM sensor's coordinate system to the camera coordinate's systen. \
 % This can be achieved by chaining together the transformation involving the checkerboard as an intermediate reference 

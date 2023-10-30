@@ -26,7 +26,7 @@
 % The function inherits the camera intrinsics with focalLength, principalPoint, and imageSize (from calib function) and camPose to apply. \
 % the correct transformation when reconstructing 3D pointCloud (from the tracking function). \
 % To use this function, you need to call both the sensorCalibration function and the tracking function first. \
-% c = sensorCalibration(); \ 
+% c = sensorCalibration(); \
 % c.extractRGBD(); \
 % c.computeEMToCameraTransform(); \
 % transform = c.emToCameraTransform. \

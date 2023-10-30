@@ -1,39 +1,49 @@
-## The code contains 3 functions for 3D reconstruction: sensorCalibration, tracking, and ptcreconstruct
+## The code contains 
+% **1 CLASS**: sensorCalibration \
+% **2 FUNCTIONS**: tracking and ptcreconstruct
 
-### SENSORCALIBRATION
-% This function is designed to perform sensor calibration by utilizing the given translation and rotation from the TSV file with associated errors, \
-% with the checkerboard frames given in the ROS bag. \
-% To use this function, simply call: \
+### SENSORCALIBRATION CLASS 
+% **sensorCalibration** \
+% This function is designed for sensor calibration, specifically for calibrating a camera sensor \
+% This function takes the translation and Rotation from the tsv datafile, extract the camera intrinsics parameters from the rosbag 
+
+% **Code execution**: \
 % c = sensorCalibration(); 
 
-### TRACKING
+% **extractRGBD** \
+% This function is used for camera calibration, processing a sequence of frames (images), detecting checkerboard patterns, \
+% estimate the camera's extrinsic parameters (rotation and translation) based on the detected points \
+% The function stores the obtained parameters for further calibration analysis \
+
+% **Code execution**: \
+% c.extractRGBD(); 
+
+% **computeEMToCameraTransform** \
+% This function computes the transformation from EM sensor's coordinate system to the camera coordinate's systen. \
+% This can be achieved by chaining together the transformation involving the checkerboard as an intermediate reference \
+
+% **Code execution**: \
+% c.computeEMToCameraTransform();
+
+### TRACKING FUNCTION
 % This function takes a matrix of Translations and Rotations. \
 % It uses the first one of each as the origin for the \
 % camera's movements through the frames of the ROS bag. 
 
 % This function calculates the relative pose between video frames for 3D \
 % reconstruction. \
-% To use this function, you need to call the sensorCalibration function first. \
-% Then apply these lines to extract the transformation: \
-% c.extractRGBD(); \
-% c.computeEMToCameraTransform(); \
-% transform = c.emToCameraTransform. \
-% Now call the function: \
-% [camPose, frameSkip, extrinsic] = tracking(transform). 
 
-### PTCRECONSTRUCT
+% **Code execution**: \
+% transform = c.emToCameraTransform. \
+% [camPose, frameSkip, extrinsic] = tracking(transform)
+
+### PTCRECONSTRUCT FUNCTION
 % This function is used for 3D reconstruction from generating 3D pointClouds. \
 % The function inherits the camera intrinsics with focalLength, principalPoint, and imageSize (from calib function) and camPose to apply. \
 % the correct transformation when reconstructing 3D pointCloud (from the tracking function). \
-% To use this function, you need to call both the sensorCalibration function and the tracking function first. \
-% c = sensorCalibration(); \
-% c.extractRGBD(); \
-% c.computeEMToCameraTransform(); \
-% transform = c.emToCameraTransform. \
-% Now call the tracking function: \
-% [camPose, frameSkip, extrinsic] = tracking(transform). \
+
+% **Code execution**: \
 % focalLength = c.fLength;\
 % principalPoint = c.pPoint; \
 % imageSize = size(c.imSize); \
-% Now call the ptcreconstruct function: \
 % [densePtCloud, sparsePtCloud] = ptcreconstruct(focalLength, principalPoint, imageSize, camPose

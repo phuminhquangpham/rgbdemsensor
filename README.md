@@ -1,4 +1,5 @@
-## The code contains 
+## 3D reconstruction using RGB-D camera andEM sensor
+
 % **1 CLASS**: sensorCalibration \
 % **2 FUNCTIONS**: tracking and ptcreconstruct
 

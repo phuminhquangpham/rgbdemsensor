@@ -1,72 +1,67 @@
+%% This class calibrates the rgbd camera and creates a transform from the EM Sensor to the Camera.
 classdef sensorCalibration < handle
     %initilise objects
     properties(SetObservable = true)
         tsvData;
         bag;
-        positionEM = [0 0 0];
-        orientationEM = [0 0 0];
         bagSel;
         intrinsicParams;
         imSize;
-        intrinsicM;
+        intrinsic;
         pPoint;
         fLength;
         translation;
         rotation;
-        numM;
-        M;
+        numImage;
+        image;
         iPointsCell; 
         wPointsCell; 
         camParam;
         idx;
-        emToCameraTransform;
+        emTransform;
     end
 
     methods
-        
+        %% initilise the object sensor
         function sensor = sensorCalibration()
             clc;
             clf;
             
-
             sensor.tsvData = readtable('forCali_GroundTruth_new360.tsv', 'FileType', 'text', 'Delimiter', '\t', 'ReadVariableNames', true); %Rz	Ry	Rx	Tx	Ty	Tz
-            % sensor.tsvData = readtable('forCali_GroundTruth.tsv', 'FileType', 'text', 'Delimiter', '\t', 'ReadVariableNames', true);
-            sensor.bag = rosbag('D:\Sensors\CalibNew_360.bag');
-            % sensor.bag = rosbag('D:\Sensors\forCali.bag');
+            sensor.bag = rosbag('D:\Sensors\CalibNew_360.bag'); 
             intrinsic = select(sensor.bag, 'Topic', '/camera/color/camera_info');
-            intrinsicMsg = readMessages(intrinsic, 1);
-            sensor.intrinsicParams = reshape(intrinsicMsg{1}.K, [3,3]);
-            sensor.pPoint = [sensor.intrinsicParams(3,1), sensor.intrinsicParams(3,2)];
-            sensor.fLength = [sensor.intrinsicParams(1,1), sensor.intrinsicParams(2,2)];
-            sensor.imSize = [intrinsicMsg{1}.Width, intrinsicMsg{1}.Height];
-            sensor.intrinsicM = cameraIntrinsics(sensor.fLength, sensor.pPoint, double(sensor.imSize));
+            intrinsicMsg = readMessages(intrinsic, 1); %reads the intrinsic of the camera from ros
+            sensor.intrinsicParams = reshape(intrinsicMsg{1}.K, [3,3]); %adjusts the intrinsics into the correct format
+            sensor.pPoint = [sensor.intrinsicParams(3,1), sensor.intrinsicParams(3,2)]; %Principle point
+            sensor.fLength = [sensor.intrinsicParams(1,1), sensor.intrinsicParams(2,2)]; %Focal Length
+            sensor.imSize = [intrinsicMsg{1}.Width, intrinsicMsg{1}.Height]; %Size of the image
+            sensor.intrinsic = cameraIntrinsics(sensor.fLength, sensor.pPoint, double(sensor.imSize)); % calulates the intrinsics of the camera
             sensor.bagSel = select(sensor.bag, 'Topic', '/camera/color/image_raw');
-            sensor.M = readMessages(sensor.bagSel);
-            sensor.numM = length(sensor.M);
-            sensor.translation = zeros(sensor.numM, 3);
-            sensor.rotation = cell(sensor.numM, 1);
-            sensor.idx = 1;
-            for k = 1:sensor.numM
+            sensor.image = readMessages(sensor.bagSel);
+            sensor.numImage = length(sensor.image); 
+            sensor.translation = zeros(sensor.numImage, 3); %matrix for translation s
+            sensor.rotation = cell(sensor.numImage, 1); %cell matrices for rotations
+            sensor.idx = 1; 
+            for k = 1:sensor.numImage %ensure rotation is of correct format
                 sensor.rotation{k} = NaN(3,3);
             end
-          
-            sensor.camParam;
-       
-            sensor.iPointsCell = cell(sensor.numM, 1);
-            sensor.wPointsCell = cell(sensor.numM, 1);
+            sensor.camParam; 
+            sensor.iPointsCell = cell(sensor.numImage, 1); %cell for image points
+            sensor.wPointsCell = cell(sensor.numImage, 1); %cell for world points
+        
         end
-
-        function extractRGBD(sensor)
+         %% Calibrates the RGBD camera
+         function calibrationRGBD(sensor)
            
-            sensor.iPointsCell = cell(sensor.numM, 1);
-            sensor.wPointsCell = cell(sensor.numM, 1);
+            sensor.iPointsCell = cell(sensor.numImage, 1);
+            sensor.wPointsCell = cell(sensor.numImage, 1);
 
             % Assuming a checkerboard pattern of size [8, 11] and square size of 0.015 meters
             checkerboardSize = [8, 11];
             squareSize = 0.015;
-
-            for i = 1:sensor.numM
-                I1 = readImage(sensor.M{i});
+            % Begin calibration
+            for i = 1:sensor.numImage
+                I1 = readImage(sensor.image{i});
                 I1_G = rgb2gray(I1);
                 [iPoints, ~] = detectCheckerboardPoints(I1_G);
 
@@ -75,25 +70,17 @@ classdef sensorCalibration < handle
                     disp('invalid');
                     continue;
                 end
-
-                % Extract timestamp information from ROS message
-                sec = sensor.M{i}.Header.Stamp.Sec;
-                nsec = sensor.M{i}.Header.Stamp.Nsec;
-                time = sec + nsec * 1e-9;
-
-             
+                         
                 imshow(I1);
                 hold on;
                 plot(iPoints(:, 1), iPoints(:, 2), 'ro', 'MarkerSize', 10);
                 hold off;
-                % fprintf('Specific Timestamp: %.4f\n', tsvTime(sensor.idx));
-                fprintf('ROS Timestamp: %.4f\n', time);
-
+               
                 % Generate checkerboard world points
                 wPoints = generateCheckerboardPoints(checkerboardSize, squareSize);
-
-                [r, t] = extrinsics(iPoints, wPoints, sensor.intrinsicM);
-                
+                %generate extrinsic data for camera
+                [r, t] = extrinsics(iPoints, wPoints, sensor.intrinsic);
+                %store extrinsic data
                 sensor.translation(i,:) = t;
                 sensor.rotation{i} = r;
                 
@@ -110,20 +97,22 @@ classdef sensorCalibration < handle
                    
                   
             end
+           %Indicates which stored data contrains NaN or otherwise
+           %incorrectly formated data to ignore for later use
            validIndices = ~cellfun(@(x) any(isnan(x(:))), sensor.rotation) & ~all(sensor.translation == 0, 2);
-          
+           %store valid data
            sensor.rotation = sensor.rotation(validIndices);
            sensor.translation = sensor.translation(validIndices, :);
            allIPoints = cat(3, sensor.iPointsCell{validIndices});
            allWPoints = sensor.wPointsCell{1}; 
            sensor.camParam = estimateCameraParameters(allIPoints, allWPoints, 'ImageSize', double(sensor.imSize));
             
-           % disp(sensor.camParam);
+          
            figure;
            showExtrinsics(sensor.camParam);
            drawnow();
            figure; 
-           imshow(readImage(sensor.M{1})); 
+           imshow(readImage(sensor.image{1})); 
            hold on;
            plot(allIPoints(:,1,1), allIPoints(:,2,1),'go');
            plot(sensor.camParam.ReprojectedPoints(:,1,1),sensor.camParam.ReprojectedPoints(:,2,1),'r+');
@@ -132,7 +121,7 @@ classdef sensorCalibration < handle
            showReprojectionErrors(sensor.camParam);
            
         end
-        function computeEMToCameraTransform(sensor)
+        function computeEMTransform(sensor)
 
             % Transformation from checkerboard to camera
             T_checkerboard_camera = sensor.translation(:); % Ensure column vector
@@ -162,8 +151,8 @@ classdef sensorCalibration < handle
             end
         
             % Store the computed transformations
-            sensor.emToCameraTransform = struct('Rotation', R_em_camera_all, 'Translation', T_em_camera_all);
-            
+            sensor.emTransform = struct('Rotation', R_em_camera_all, 'Translation', T_em_camera_all);
+             
         end
     end
 end

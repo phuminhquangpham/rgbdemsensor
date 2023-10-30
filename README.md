@@ -46,7 +46,7 @@ This project was carried out by 3 members, with their individual contributions
 % reconstruction. 
 
 % **Code execution**: \
-% transform = c.emTransform. \
+% transform = RGBD.emToCameraTransform \
 % [camPose, frameSkip, extrinsic] = tracking(transform)
 
 <hr>
@@ -57,7 +57,7 @@ This project was carried out by 3 members, with their individual contributions
 % the correct transformation when reconstructing 3D pointCloud (from the tracking function). 
 
 % **Code execution**: \
-% focalLength = c.fLength;\
-% principalPoint = c.pPoint; \
-% imageSize = size(c.imSize); \
+% focalLength = RGBD.fLength;\
+% principalPoint = RGBD.pPoint; \
+% imageSize = size(RGBD.imSize); \
 % [densePtCloud, sparsePtCloud] = ptcreconstruct(focalLength, principalPoint, imageSize, camPose)

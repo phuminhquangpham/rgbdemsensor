@@ -17,14 +17,14 @@
 % The function stores the obtained parameters for further calibration analysis 
 
 % **Code execution**: \
-% c.extractRGBD(); 
+% calibrationRGBD = extractRGBD; 
 
 [**computeEMToCameraTransform**](https://github.com/phuminhquangpham/rgbdemsensor/blob/main/sensorCalibration.m#L59) \
 % This function computes the transformation from EM sensor's coordinate system to the camera coordinate's systen. \
 % This can be achieved by chaining together the transformation involving the checkerboard as an intermediate reference 
 
 % **Code execution**: \
-% c.computeEMToCameraTransform();
+% computeEMTransform = emToCameraTransform;
 
 ### [TRACKING FUNCTION](https://github.com/phuminhquangpham/rgbdemsensor/blob/main/tracking.m)
 % This function takes a matrix of Translations and Rotations. \

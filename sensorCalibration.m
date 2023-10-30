@@ -1,6 +1,9 @@
-%% This class calibrates the rgbd camera and creates a transform from the EM Sensor to the Camera.
+%% This class calibrates the rgbd camera and creates a transform from the 
+% EM Sensor to the Camera. It reads the data from the calibration ROS and a 
+% .tsv file to create an object that will be used to perform the
+% aforementioned calibration. 
 classdef sensorCalibration < handle
-    %initilise objects
+    %initilise properties for the class
     properties(SetObservable = true)
         tsvData;
         bag;
@@ -22,7 +25,7 @@ classdef sensorCalibration < handle
     end
 
     methods
-        %% initilise the object sensor
+        %% Initilise the object: sensor
         function sensor = sensorCalibration()
             clc;
             clf;
@@ -50,12 +53,16 @@ classdef sensorCalibration < handle
             sensor.wPointsCell = cell(sensor.numImage, 1); %cell for world points
         
         end
-         %% Calibrates the RGBD camera
-         function calibrationRGBD(sensor)
-           
-            sensor.iPointsCell = cell(sensor.numImage, 1);
-            sensor.wPointsCell = cell(sensor.numImage, 1);
-
+        %% This function calibrates the RGBD camera by reading each image
+        % and generating the checkerboard points for each. It then compares
+        % these points to the world points and generates the camera
+        % extrinsics. Finally, the code will calculate the camera parameters
+        % for later use. 
+        function calibrationRGBD(sensor)
+        
+            sensor.iPointsCell = cell(sensor.numImage, 1);%cell for image points
+            sensor.wPointsCell = cell(sensor.numImage, 1);%cell for world points
+            
             % Assuming a checkerboard pattern of size [8, 11] and square size of 0.015 meters
             checkerboardSize = [8, 11];
             squareSize = 0.015;
@@ -64,7 +71,7 @@ classdef sensorCalibration < handle
                 I1 = readImage(sensor.image{i});
                 I1_G = rgb2gray(I1);
                 [iPoints, ~] = detectCheckerboardPoints(I1_G);
-
+            
                 if isempty(iPoints) || ~all(isfinite(iPoints(:)))
                     % Handle cases where the checkerboard is invalid
                     disp('invalid');
@@ -97,32 +104,35 @@ classdef sensorCalibration < handle
                    
                   
             end
-           %Indicates which stored data contrains NaN or otherwise
-           %incorrectly formated data to ignore for later use
-           validIndices = ~cellfun(@(x) any(isnan(x(:))), sensor.rotation) & ~all(sensor.translation == 0, 2);
-           %store valid data
-           sensor.rotation = sensor.rotation(validIndices);
-           sensor.translation = sensor.translation(validIndices, :);
-           allIPoints = cat(3, sensor.iPointsCell{validIndices});
-           allWPoints = sensor.wPointsCell{1}; 
-           sensor.camParam = estimateCameraParameters(allIPoints, allWPoints, 'ImageSize', double(sensor.imSize));
+            %Indicates which stored data contrains NaN or otherwise
+            %incorrectly formated data to ignore for later use
+            validIndices = ~cellfun(@(x) any(isnan(x(:))), sensor.rotation) & ~all(sensor.translation == 0, 2);
+            %store valid data
+            sensor.rotation = sensor.rotation(validIndices);
+            sensor.translation = sensor.translation(validIndices, :);
+            allIPoints = cat(3, sensor.iPointsCell{validIndices});
+            allWPoints = sensor.wPointsCell{1}; 
+            sensor.camParam = estimateCameraParameters(allIPoints, allWPoints, 'ImageSize', double(sensor.imSize));
             
-          
-           figure;
-           showExtrinsics(sensor.camParam);
-           drawnow();
-           figure; 
-           imshow(readImage(sensor.image{1})); 
-           hold on;
-           plot(allIPoints(:,1,1), allIPoints(:,2,1),'go');
-           plot(sensor.camParam.ReprojectedPoints(:,1,1),sensor.camParam.ReprojectedPoints(:,2,1),'r+');
-           legend('Detected Points','ReprojectedPoints');
-           hold off;
-           showReprojectionErrors(sensor.camParam);
-           
+            %Displays calibration data
+            figure;
+            showExtrinsics(sensor.camParam);
+            drawnow();
+            figure; 
+            imshow(readImage(sensor.image{1})); 
+            hold on;
+            plot(allIPoints(:,1,1), allIPoints(:,2,1),'go');
+            plot(sensor.camParam.ReprojectedPoints(:,1,1),sensor.camParam.ReprojectedPoints(:,2,1),'r+');
+            legend('Detected Points','ReprojectedPoints');
+            hold off;
+            showReprojectionErrors(sensor.camParam);
+        
         end
+        %% This function computes the transfrom from the EM to the RGBD camera
+        % using the extrinsics from the calibration using the chain rule
+        % and outputs them as a structure within the class. 
         function computeEMTransform(sensor)
-
+    
             % Transformation from checkerboard to camera
             T_checkerboard_camera = sensor.translation(:); % Ensure column vector
         
@@ -156,6 +166,7 @@ classdef sensorCalibration < handle
         end
     end
 end
+%% End Code
             
         
 

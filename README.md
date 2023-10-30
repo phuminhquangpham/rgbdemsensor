@@ -61,3 +61,4 @@ the correct transformation when reconstructing 3D pointCloud (from the tracking 
   principalPoint = RGBD.pPoint; \
   imageSize = size(RGBD.imSize); \
   [densePtCloud, sparsePtCloud] = ptcreconstruct(focalLength, principalPoint, imageSize, camPose)
+

@@ -26,7 +26,7 @@ This project was carried out by 3 members, with their individual contributions
 % **Code execution**: \
 % calibrationRGBD = extractRGBD; 
 
-+ [**computeEMTransform**](https://github.com/phuminhquangpham/rgbdemsensor/blob/main/sensorCalibration.m#L59) \
++ [**computeEMTransform**](https://github.com/phuminhquangpham/rgbdemsensor/blob/main/sensorCalibration.m#L59) 
 
 % This function computes the transformation from EM sensor's coordinate system to the camera coordinate's systen. \
 % This can be achieved by chaining together the transformation involving the checkerboard as an intermediate reference 

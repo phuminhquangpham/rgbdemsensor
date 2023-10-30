@@ -41,7 +41,7 @@
 ### [PTCRECONSTRUCT FUNCTION](https://github.com/phuminhquangpham/rgbdemsensor/blob/main/ptcreconstruct.m)
 % This function is used for 3D reconstruction from generating 3D pointClouds. \
 % The function inherits the camera intrinsics with focalLength, principalPoint, and imageSize (from calib function) and camPose to apply. \
-% the correct transformation when reconstructing 3D pointCloud (from the tracking function). \
+% the correct transformation when reconstructing 3D pointCloud (from the tracking function). 
 
 % **Code execution**: \
 % focalLength = c.fLength;\

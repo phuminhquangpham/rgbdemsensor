@@ -32,7 +32,7 @@
 % camera's movements through the frames of the ROS bag. 
 
 % This function calculates the relative pose between video frames for 3D \
-% reconstruction. \
+% reconstruction. 
 
 % **Code execution**: \
 % transform = c.emToCameraTransform. \

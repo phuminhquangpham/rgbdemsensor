@@ -5,12 +5,12 @@
 % translation and rotation from the TSV file with associated errors, with the \
 % checkerboard frames given in the ROS bag. \
 % To use this function, simply call: \
-% c = sensorCalibration(); \
+% c = sensorCalibration(); 
 
 ### TRACKING
 % This function takes a matrix of Translations and Rotations. \
 % It uses the first one of each as the origin for the \
-% camera's movements through the frames of the ROS bag. \
+% camera's movements through the frames of the ROS bag. 
 
 % This function calculates the relative pose between video frames for 3D \
 % reconstruction. \
@@ -20,7 +20,7 @@
 % c.computeEMToCameraTransform(); \
 % transform = c.emToCameraTransform. \
 % Now call the function: \
-% [camPose, frameSkip, extrinsic] = tracking(transform). \
+% [camPose, frameSkip, extrinsic] = tracking(transform). 
 
 ### PTCRECONSTRUCT
 % This function is used for 3D reconstruction from generating 3D pointClouds. \ 

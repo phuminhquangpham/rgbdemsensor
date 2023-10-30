@@ -1,13 +1,14 @@
-% The code below contains 3 functions: sensorCalibration, tracking, and ptcreconstruct
+%% The code below contains 3 functions: sensorCalibration, tracking, and ptcreconstruct
 
-%% SENSORCALIBRATION
+### SENSORCALIBRATION
 % This function is designed to perform sensor calibration by utilizing the given 
 % translation and rotation from the tsv file with associated errors, with the 
 % checkerboard frames given in the ros bag
 % To use this function, simply call: 
 % c = sensorCalibration();
 
-% TRACKING: This function takes a matrix of Translations and Rotations
+### TRACKING
+% This function takes a matrix of Translations and Rotations
 % as an input and uses the first one of each as the origin for the
 % camera's movements through the frames of the rosbag.
 
@@ -21,14 +22,14 @@
 % Now call the function: 
 % [camPose, frameSkip, extrinsic] = tracking(transform);
 
-%% PTCRECONSTRUCT
+### PTCRECONSTRUCT
 % This function is used for 3D reconstruction from generating 3D pointClouds
-% The function inheritS the camera intrinsics with focalLength,
-% principalPoint and imageSize (from calib function) and camPose to apply
-% the correct transformation when reconstruct 3D pointCloud (from tracking
+% The function inherits the camera intrinsics with focalLength,
+% principalPoint, and imageSize (from calib function) and camPose to apply
+% the correct transformation when reconstructing 3D pointCloud (from the tracking
 % function)
-% To use this function, you need to call both sensorCalibration function and 
-% tracking function first
+% To use this function, you need to call both the sensorCalibration function and 
+% the tracking function first
 % c = sensorCalibration();
 % c.extractRGBD();
 % c.computeEMToCameraTransform();
@@ -37,4 +38,4 @@
 % focalLength = c.fLength;
 % principalPoint = c.pPoint;
 % imageSize = size(c.imSize);
-% [densePtCloud, sparsePtCloud] = ptcreconstruct(focalLength,principalPoint,imageSize,camPose)
+% [densePtCloud, sparsePtCloud] = ptcreconstruct(focalLength, principalPoint, imageSize, camPose)
